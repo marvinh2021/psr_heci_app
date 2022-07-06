@@ -18,14 +18,9 @@ struct mei_client_data {
 
 int mei_connect(struct mei_connect_client_data*, int*);
 
-int mei_send_message(struct mei_connect_client_data *client,
-		int handle,
-		unsigned char *buffer, unsigned int buff_len);
+int mei_send_message(int handle, void *buffer, size_t buff_len);
 
-int mei_receive_message(struct mei_connect_client_data *client,
-		int handle,
-		unsigned char *buffer, unsigned int *buff_len,
-		unsigned int timeout_ms);
+int mei_receive_message(int, void*, size_t*, unsigned int);
 
 void mei_close(int);
 

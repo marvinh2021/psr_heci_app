@@ -58,27 +58,17 @@ int mei_connect(struct mei_connect_client_data *data, int *handle)
  * @param timeout 
  * @return int 
  */
-int mei_send_message(struct mei_connect_client_data *client,
-		int handle,
-		unsigned char *buffer, unsigned int buff_len)
+int mei_send_message(int handle, void *buffer, size_t buff_len)
 {
 	ssize_t written_bytes;
 	
-	if (NULL == client || handle < 0 || NULL == buffer || 0 == buff_len) {
-		return -1; // Error Invalid parameter.
-	}
-
-	if (client->out_client_properties.max_msg_length < buff_len) {
-		return -1; // buffer size overflow max_msg_len
-	}
-
 	written_bytes = write(handle, (void *)buffer, (size_t)buff_len);
 	if (written_bytes != (ssize_t)buff_len) {
 		char prompt[128];
 		int err = errno;
 		sprintf(prompt, "%s: write to mei_dev file error(%s)", __func__, errno_name(err));
 		perror(prompt);
-		return -1; // msg tx error
+		return -err; // msg tx error
 	}
 
 	return 0;
@@ -94,19 +84,12 @@ int mei_send_message(struct mei_connect_client_data *client,
  * @param timeout_ms  Polling timeout in msec
  * @return int 
  */
-int mei_receive_message(struct mei_connect_client_data *client,
-		int handle,
-		unsigned char *buffer, unsigned int *buff_len,
-		unsigned int timeout_ms)
+int mei_receive_message(int handle, void *buffer, size_t *buff_len, unsigned int timeout_ms)
 {
 	ssize_t read_bytes;
 	struct timeval tv;
 	fd_set readfds;
 	int ready;
-
-	if (NULL == client || handle < 0 || NULL == buffer || 0 == buff_len) {
-		return -1; // Error Invalid parameter.
-	}
 
 	/* set timeout */	
 	tv.tv_sec = (timeout_ms ? timeout_ms : MAX_MEI_TIMEOUT_MSEC) / 1000;
@@ -119,10 +102,10 @@ int mei_receive_message(struct mei_connect_client_data *client,
 	ready = select(handle+1, &readfds, NULL, NULL, &tv);
 	if (ready < 0) {
 		// select error
-		return -1;
+		return -EBUSY;
 	} else if (0 == ready) {
 		// timeout
-		return -1;
+		return -ETIMEDOUT;
 	} else if (!FD_ISSET(handle, &readfds)) {
 		// internal error
 		return -1;
@@ -132,10 +115,10 @@ int mei_receive_message(struct mei_connect_client_data *client,
 	read_bytes = read(handle, buffer, *buff_len);
 	if (read_bytes < 0) {
 		// read error
-		return -1;
+		return -EIO;
 	} else if (0 == read_bytes) {
 		// No message response
-		return -1;
+		return -ENOMSG;
 	}
 	*buff_len = read_bytes;
 

@@ -39,9 +39,19 @@ namespace Heci {
         } mei_client;
 
     public:
+
+        enum Heci_status {
+            SUCCESS = 0,
+            INVALID_STATE = 0x1,
+            INVALID_PARAMS,
+        };
+
         Heci_command() = delete;
 
         Heci_command(Guid_id);
+
+        Heci_status Heci_cmd_transact(void *tx_buff, size_t tx_len,
+                void *rx_buff, size_t *rx_len, const uint32_t timeout_ms);
 
         ~Heci_command();
 

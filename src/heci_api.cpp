@@ -52,3 +52,32 @@ Heci_command::~Heci_command()
     if (!(mei_client.handle < 0))
         mei_close(mei_client.handle);
 }
+
+/**
+ * @brief Invoke MEI service command
+ * 
+ * @param tx_buff 
+ * @param tx_len 
+ * @param rx_buff 
+ * @param rx_len 
+ * @param timout_ms 
+ * @return Heci_status 
+ */
+Heci_command::Heci_status Heci_command::Heci_cmd_transact(void *tx_buff, size_t tx_len,
+                                void *rx_buff, size_t *rx_len,
+                                const uint32_t timeout_ms)
+{
+    int res;
+
+    if (nullptr == tx_buff || nullptr == rx_buff || nullptr == rx_len ||
+        tx_len > mei_client.properties.max_msg_length)
+        return INVALID_PARAMS;
+
+    if ((res = mei_send_message(mei_client.handle, tx_buff, tx_len)) < 0)
+        throw std::system_error(-res, std::system_category());
+
+    if ((res = mei_receive_message(mei_client.handle, rx_buff, rx_len, (unsigned int)timeout_ms)) < 0)
+        throw std::system_error(-res, std::system_category());
+
+    return SUCCESS;
+}
