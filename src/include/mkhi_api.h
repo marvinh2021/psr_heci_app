@@ -5,8 +5,6 @@
 namespace Heci {
     class Mkhi_api : public Heci_command {
 
-        using Byte = unsigned char;
-        
         struct Mkhi_message_header {
             Byte group_id;
             Byte command;

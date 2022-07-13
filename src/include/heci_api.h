@@ -10,6 +10,8 @@ using namespace std;
 
 namespace Heci {
 
+    using Byte = unsigned char;
+
     enum class Guid_id {
         MKHI_HECI_FIXED_CLIENT_GUID = 1,
         MKHI_HECI_DYNAMIC_CLIENT_GUID,
