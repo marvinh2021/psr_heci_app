@@ -47,6 +47,13 @@ int main(int argc, const char* argv[])
 
 		pPsr = new Psr_api();	
 		cout << *pPsr << endl;	
+		Psr_api::Psr_log_state* pPsr_state = new Psr_api::Psr_log_state();
+		Psr_api::Psr_availability* pPsr_avail = new Psr_api::Psr_availability();
+		pPsr->get_psr_log_state(pPsr_state, pPsr_avail);
+		//cout << *pPsr_state;
+		//cout << *pPsr_avail;
+		delete pPsr_state;
+		delete pPsr_avail;
 		delete pPsr;	
 	} catch (const std::system_error& se) {
 		//cerr << se.code() << endl;

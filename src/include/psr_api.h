@@ -82,7 +82,7 @@ namespace Heci {
             ECDSA_SHA384 = 0,
         };
 
-    protected:
+//    protected:
 
         #pragma pack(1)
 
@@ -208,6 +208,8 @@ namespace Heci {
         bool is_psr_supported();    // Check if PSR is supported in FW
 
         Psr_status get_psr_log_state(Psr_log_state *res_state, Psr_availability *res_avail);
+
+        Psr_status get_psr_log(Psr_heci_get_log_state_response *psr_log_response);
     };
 }
 
