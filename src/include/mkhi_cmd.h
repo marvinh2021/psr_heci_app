@@ -1,9 +1,9 @@
-#ifndef _MKHI_API_H_
-#define _MKHI_API_H_
+#ifndef _MKHI_CMD_H_
+#define _MKHI_CMD_H_
 #include "heci_api.h"
 
 namespace Heci {
-    class Mkhi_api : public Heci_command {
+    class Mkhi_command : public Heci_command {
 
         struct Mkhi_message_header {
             Byte group_id;
@@ -59,10 +59,10 @@ namespace Heci {
             uint16_t fitc_hotfix;
         };
 
-        Mkhi_api() : Heci_command(Guid_id::MKHI_HECI_DYNAMIC_CLIENT_GUID) {}   // Constructor
+        Mkhi_command() : Heci_command(Guid_id::MKHI_HECI_DYNAMIC_CLIENT_GUID) {}   // Constructor
 
         bool Get_fw_version(Fw_version_resp *res);
     };
 };
 
-#endif // _MKHI_API_H_
+#endif // _MKHI_CMD_H_

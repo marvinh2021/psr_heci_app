@@ -1,5 +1,5 @@
-#ifndef _PSR_DATA_H_
-#define _PSR_DATA_H_
+#ifndef _MEI_DATA_H_
+#define _MEI_DATA_H_
 #include <sys/stat.h>
 #include <sys/ioctl.h>
 #include <linux/mei.h>
@@ -24,4 +24,4 @@ int mei_receive_message(int, void*, size_t*, unsigned int);
 
 void mei_close(int);
 
-#endif // _PSR_DATA_H_
+#endif // _MEI_DATA_H_

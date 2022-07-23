@@ -19,8 +19,9 @@ C_EXT := .c
 CPP_EXT := .cpp
 SRCDIR := $(LOCAL_PATH)/src
 OBJDIR := $(LOCAL_PATH)/obj
+BINDIR := $(LOCAL_PATH)/bin
 INCLUDEDIR := $(SRCDIR)/include
-LIBDIR := $(LOCAL_PATH)
+LIBDIR := $(LOCAL_PATH)/bin
 CFLAGS += -I$(INCLUDEDIR)
 CXXFLAGS += -I$(INCLUDEDIR)
 
@@ -31,6 +32,7 @@ CPP_SRC := $(wildcard $(SRCDIR)/*$(CPP_EXT))
 C_OBJ := $(C_SRC:$(SRCDIR)/%$(C_EXT)=$(OBJDIR)/%.o)
 CPP_OBJ := $(CPP_SRC:$(SRCDIR)/%$(CPP_EXT)=$(OBJDIR)/%.o)
 LIBS := $(LIBDIR)/libheci_psr.a
+PSR_APP := $(BINDIR)/$(APPNAME)
 # UNIX-based OS variables & settings
 DELOBJ = $(C_OBJ) $(CPP_OBJ)
 
@@ -38,15 +40,17 @@ DELOBJ = $(C_OBJ) $(CPP_OBJ)
 ####################### Targets beginning here #########################
 ########################################################################
 
-all: $(APPNAME)
+all: $(PSR_APP)
 
 # Builds the app
-$(LOCAL_PATH)/$(APPNAME): $(CPP_OBJ) | $(LIBS)
+$(PSR_APP): $(CPP_OBJ) | $(LIBS)
+	@mkdir -p $(dir $@)
 	$(DBG)$(CCXX) $(CXXFLAGS) -o $@ $^ -L$(LIBDIR) $(LDFLAGS)
 	@echo "Build $(APPNAME) successfully complete."
 
 # Building rule for .a libraries
 $(LIBS): $(C_OBJ)
+	@mkdir -p $(dir $@)
 	$(DBG)$(AR) $(AROPS) $@ $^
 
 # Building rule for .o files and its .cpp in combination with all .h
@@ -65,5 +69,4 @@ $(OBJDIR)/%.o: $(SRCDIR)/%$(C_EXT)
 .PHONY: clean
 clean:
 	$(DBG)[ -d $(OBJDIR) ] && rm -rf $(OBJDIR) || true
-	$(DBG)[ -f $(APPNAME) ] && rm $(APPNAME) || true
-	$(DBG)[ -f $(LIBS) ] && rm $(LIBS) || exit 0
+	$(DBG)[ -d $(BINDIR) ] && rm -rf $(BINDIR) || exit 0

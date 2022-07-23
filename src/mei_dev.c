@@ -9,7 +9,7 @@
 #include <unistd.h>
 #include <sys/time.h>
 #include <sys/select.h>
-#include "psr_data.h"
+#include "mei_data.h"
 
 #define MEI_DEVICE "/dev/mei0"
 

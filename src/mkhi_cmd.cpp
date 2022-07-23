@@ -1,5 +1,5 @@
 /**
- * @file mkhi_api.cpp
+ * @file mkhi_cmd.cpp
  * @author Marvin Hsu (marvinh@intel.com)
  * @brief 
  * @version 0.1
@@ -9,13 +9,13 @@
  * 
  */
 #include <iostream>
-#include "mkhi_api.h"
+#include "mkhi_cmd.h"
 #include "heci_api.h"
 
 using namespace Heci;
 using namespace std;
 
-bool Mkhi_api::Get_fw_version(Fw_version_resp *res)
+bool Mkhi_command::Get_fw_version(Fw_version_resp *res)
 {
     Fw_version_req input;
     size_t res_len = sizeof(*res);
